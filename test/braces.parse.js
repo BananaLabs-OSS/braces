@@ -10,6 +10,21 @@ describe('braces.parse()', () => {
       const MAX_LENGTH = 1024 * 64;
       assert.throws(() => parse('.'.repeat(MAX_LENGTH + 2)));
     });
+
+    it('should reject brace nesting that exceeds the bounded default depth', () => {
+      const input = '{'.repeat(101) + 'a' + '}'.repeat(101);
+      assert.throws(() => parse(input), /exceeds max depth \(100\)/);
+    });
+
+    it('should support an explicit lower maxDepth', () => {
+      assert.throws(() => parse('{{a}}', { maxDepth: 1 }), /exceeds max depth \(1\)/);
+      assert.doesNotThrow(() => parse('{{a}}', { maxDepth: 2 }));
+    });
+
+    it('should reject invalid maxDepth values', () => {
+      assert.throws(() => parse('{a}', { maxDepth: -1 }), /non-negative safe integer/);
+      assert.throws(() => parse('{a}', { maxDepth: 1.5 }), /non-negative safe integer/);
+    });
   });
 
   describe('valid', () => {
