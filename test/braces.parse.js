@@ -18,7 +18,7 @@ describe('braces.parse()', () => {
 
     it('should support an explicit lower maxDepth', () => {
       assert.throws(() => parse('{{a}}', { maxDepth: 1 }), /exceeds max depth \(1\)/);
-      assert.doesNotThrow(() => parse('{{a}}', { maxDepth: 2 }));
+      assert.ok(parse('{{a}}', { maxDepth: 2 }));
     });
 
     it('should reject invalid maxDepth values', () => {
